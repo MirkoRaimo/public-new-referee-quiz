@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:nuovoquizarbitri/logic/bloc/settings_bloc.dart';
 import 'package:nuovoquizarbitri/logic/simple_bloc_observer.dart';
@@ -10,28 +9,21 @@ import 'package:nuovoquizarbitri/pages/recap_answers_page.dart';
 import 'package:nuovoquizarbitri/pages/settings_page.dart';
 import 'package:nuovoquizarbitri/pages/true_false_page.dart';
 import 'package:nuovoquizarbitri/redux/app/app_state.dart';
-import 'package:nuovoquizarbitri/redux/settings/settings_actions.dart';
-//import 'package:nuovoquizarbitri/redux/settings/settings_state.dart';
 import 'package:nuovoquizarbitri/redux/store.dart';
 import 'package:nuovoquizarbitri/utils/constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:redux/redux.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool darkMode = prefs.getBool("darkMode") ?? null;
   HydratedBloc.storage = await HydratedStorage.build(
       storageDirectory: await getApplicationDocumentsDirectory());
   Bloc.observer = SimpleBlocObserver();
-  runApp(MyApp(initialDarkMode: darkMode));
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  bool initialDarkMode;
-
-  MyApp({Key key, @required this.initialDarkMode}) : super(key: key);
+  MyApp({Key key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -53,16 +45,7 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             title: title,
             debugShowCheckedModeBanner: false,
-            //theme: _handleInitialDarkMode(context, state.darkMode)
-            theme: state.darkMode
-                ? ThemeData(
-                    brightness: Brightness.dark,
-                    primarySwatch: DARK_GREEN,
-                    accentColor: DARK_GREEN_ACCENT,
-                    primaryColor: DARK_GREEN)
-                : ThemeData(
-                    primarySwatch: Colors.green,
-                    accentColor: Colors.greenAccent),
+            theme: handleTheme(state),
             home: HomePage(title: title),
             routes: {
               HOME_ROUTE: (context) => HomePage(title: title),
@@ -113,6 +96,17 @@ class _MyAppState extends State<MyApp> {
 */
   }
 
+  ThemeData handleTheme(SettingsState state) {
+    return state.darkMode
+        ? ThemeData(
+            brightness: Brightness.dark,
+            primarySwatch: DARK_GREEN,
+            accentColor: DARK_GREEN_ACCENT,
+            primaryColor: DARK_GREEN)
+        : ThemeData(
+            primarySwatch: Colors.green, accentColor: Colors.greenAccent);
+  }
+
   @override
   void dispose() {
     _settingsBloc.close();
@@ -124,19 +118,4 @@ class _MyAppState extends State<MyApp> {
       Navigator.pushNamed(context, '/');
     }
   }
-
-  // bool _handleInitialDarkMode(BuildContext context, bool darkModeState) {
-  //   bool _tmpInitialDarkMode = widget.initialDarkMode;
-  //   if (widget.initialDarkMode != null) {
-  //     _setInitialDarkMode(context, widget.initialDarkMode);
-  //     initialDarkMode = null;
-  //   }
-
-  //   return _tmpInitialDarkMode ?? darkModeState;
-  // }
-
-  // Future _setInitialDarkMode(BuildContext context, bool initialDarkMode) async {
-  //   await StoreProvider.of<AppState>(context)
-  //       .dispatch(SetDarkMode(darkMode: initialDarkMode));
-  // }
 }
