@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nuovoquizarbitri/logic/bloc/settings_bloc.dart';
+import 'package:nuovoquizarbitri/logic/bloc/settings_bloc/settings_bloc.dart';
 
 import 'package:nuovoquizarbitri/utils/constants.dart';
 

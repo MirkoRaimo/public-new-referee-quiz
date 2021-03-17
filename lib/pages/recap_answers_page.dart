@@ -10,7 +10,8 @@ class RecapAnswersPage extends StatelessWidget {
     return StoreConnector<AppState, QuestionsListState>(
         converter: (store) => store.state.questionsListState,
         builder: (BuildContext context, QuestionsListState questionsListState) {
-          return Flexible(flex: 2,child: recapAnswers(context, questionsListState));
+          return Flexible(
+              flex: 2, child: recapAnswers(context, questionsListState));
         });
   }
 }

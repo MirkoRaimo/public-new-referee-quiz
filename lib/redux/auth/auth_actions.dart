@@ -8,7 +8,7 @@ class LogIn {
 class LogInSuccessful {
   final User user;
 
-  LogInSuccessful({@required this.user});
+  LogInSuccessful({this.user});
 
   @override
   String toString() {

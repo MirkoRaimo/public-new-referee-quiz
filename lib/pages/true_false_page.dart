@@ -39,43 +39,44 @@ class _TrueFalsePageState extends State<TrueFalsePage>
     return StoreProvider(
         store: store,
         child: Scaffold(
-          appBar: AppBar(
-            title: SelectableText(widget.title),
-          ),
-          body: _buildBody(context),
-          floatingActionButton: _buildRowFab()
-        ));
+            appBar: AppBar(
+              title: SelectableText(widget.title),
+            ),
+            body: _buildBody(context),
+            floatingActionButton: _buildRowFab()));
   }
 
   Column _buildBody(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-
       StoreConnector<AppState, QuestionsListState>(
           distinct: true, //to improve the performances
           converter: (store) => store.state.questionsListState,
           builder: (BuildContext context, QuestionsListState userState) {
             return SizedBox(
               //height: !store.state.questionsListState.answeredLastQuestion ? MediaQuery.of(context).size.height * 0.08 : 0,
-              height: MediaQuery.of(context).size.height * (!store.state.questionsListState.answeredLastQuestion ? 0.08 : 0.02),
+              height: MediaQuery.of(context).size.height *
+                  (!store.state.questionsListState.answeredLastQuestion
+                      ? 0.08
+                      : 0.02),
             );
           }),
-
-          SelectableText(
-            "$STR_TRUE_OR_FALSE?",
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline5,
-          ),
-
+      SelectableText(
+        "$STR_TRUE_OR_FALSE?",
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.headline5,
+      ),
       StoreConnector<AppState, QuestionsListState>(
           distinct: true, //to improve the performances
           converter: (store) => store.state.questionsListState,
           builder: (BuildContext context, QuestionsListState userState) {
             return !store.state.questionsListState.answeredLastQuestion
                 ? _createCustomCards(context)
-                : Flexible(flex: 2,child: recapAnswers(context, store.state.questionsListState));
+                : Flexible(
+                    flex: 2,
+                    child:
+                        recapAnswers(context, store.state.questionsListState));
           }),
-
-        ]);
+    ]);
   }
 
   StoreConnector<AppState, QuestionsListState> _buildRowFab() {
@@ -100,7 +101,8 @@ class _TrueFalsePageState extends State<TrueFalsePage>
           final double _cardMinWidth = MediaQuery.of(context).size.width * 0.8;
           final double _cardMinHeight = MediaQuery.of(context).size.width * 0.6;
 
-          return _tinderSwapCard(_cardMaxWidth, _cardMaxHeight, _cardMinWidth, _cardMinHeight, innerContext);
+          return _tinderSwapCard(_cardMaxWidth, _cardMaxHeight, _cardMinWidth,
+              _cardMinHeight, innerContext);
         }));
   }
 
@@ -159,7 +161,7 @@ class _TrueFalsePageState extends State<TrueFalsePage>
   static List<Card> _generateListOfCards(List<Question> listOfQuestions) {
     List<Card> listOfCards = [];
     if (listOfQuestions != null && listOfQuestions.isNotEmpty)
-      for (int i = 0; i < listOfQuestions.length ?? 100; i++) {
+      for (int i = 0; i < listOfQuestions.length; i++) {
         Card card = new Card(
             color: Colors.primaries[Random().nextInt(Colors.accents.length)],
             child: Center(

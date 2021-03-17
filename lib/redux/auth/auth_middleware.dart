@@ -20,14 +20,17 @@ Middleware<AppState> _createLogInMiddleware(context) {
     final GoogleSignIn _googleSignIn = new GoogleSignIn();
     if (action is LogIn) {
       try {
-        GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+        //GoogleSignInAccount googleUser = await (_googleSignIn.signIn() as FutureOr<GoogleSignInAccount>);
+        GoogleSignInAccount googleUser =
+            await (_googleSignIn.signIn() as GoogleSignInAccount);
         GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-        final UserCredential authResult = await _auth.signInWithCredential(credential);
+        final UserCredential authResult =
+            await _auth.signInWithCredential(credential);
         User user = authResult.user;
         print("signed in " + user.displayName);
 

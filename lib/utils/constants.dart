@@ -6,6 +6,7 @@ const String TRUE_FALSE_ROUTE = "/True_False";
 const String QUIZ_ROUTE = "/Quiz";
 const String RECAP_ANSWERS_ROUTE = "/RecapAnswersPage";
 const String SETTINGS_ROUTE = "/SettingsPage";
+const String LOGIN_ROUTE = "/LoginPage";
 
 // Strings used
 // (the app is for the italian market, so it doesn't need to be internationalized)

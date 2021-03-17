@@ -35,19 +35,17 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
         _generateListOfCards(store.state.questionsListState.questionsList);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return StoreProvider(
         store: store,
         child: Scaffold(
-            appBar: AppBar(
-              title: SelectableText(widget.title),
-            ),
-            body: _buildBody(context),
+          appBar: AppBar(
+            title: SelectableText(widget.title),
+          ),
+          body: _buildBody(context),
         ));
   }
-
 
 /*  @override
   Widget build(BuildContext context) {
@@ -150,7 +148,7 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
   static List<Card> _generateListOfCards(List<Question> listOfQuestions) {
     List<Card> listOfCards = [];
     if (listOfQuestions != null && listOfQuestions.isNotEmpty)
-      for (int i = 0; i < listOfQuestions.length ?? 100; i++) {
+      for (int i = 0; i < listOfQuestions.length; i++) {
         Card card = new Card(
             color: Colors.primaries[Random().nextInt(Colors.accents.length)],
             child: Center(

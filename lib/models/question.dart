@@ -1,24 +1,24 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
 @immutable
-class Question {
-  final BuildContext context;
+class Question extends Equatable {
   final String questionStatement;
   final List<String> possibleAnswers;
-  final int correctAnswer; //position of the list of the possible answers
+  final int correctAnswer; //position in the list having the possible answers
   final int givenAnswer;
-  bool answeredCorrectly;
 
   static const int TRUE = 0;
   static const int FALSE = 1;
 
   Question(
-      {this.context,
-      this.questionStatement,
+      {this.questionStatement,
       this.possibleAnswers,
       this.correctAnswer,
-      this.givenAnswer,
-      this.answeredCorrectly}) {
+      this.givenAnswer});
+
+  bool answeredCorrectly() {
+    bool answeredCorrectly = false;
     if (givenAnswer != null) {
       if (correctAnswer != null) {
         if (givenAnswer == correctAnswer) {
@@ -29,28 +29,26 @@ class Question {
             "Correct answer not provided for the question $questionStatement");
       }
     }
+    return answeredCorrectly;
   }
 
   Question copyWith(
-      {BuildContext context,
-      String questionStatement,
+      {String questionStatement,
       List<String> possibleAnswers,
       int correctAnswer,
       int givenAnswer,
       bool answeredCorrectly}) {
     return new Question(
-        context: context ?? this.context,
-        questionStatement: questionStatement ?? this.questionStatement,
-        possibleAnswers: possibleAnswers ?? this.possibleAnswers,
-        correctAnswer: correctAnswer ?? this.correctAnswer,
-        givenAnswer: givenAnswer ?? this.givenAnswer,
-        answeredCorrectly: answeredCorrectly ?? this.answeredCorrectly);
+      questionStatement: questionStatement ?? this.questionStatement,
+      possibleAnswers: possibleAnswers ?? this.possibleAnswers,
+      correctAnswer: correctAnswer ?? this.correctAnswer,
+      givenAnswer: givenAnswer ?? this.givenAnswer,
+    );
   }
 
   factory Question.initial() {
     return new Question(
         questionStatement: "Default question, correct answer: true",
-        answeredCorrectly: false,
         correctAnswer: Question.TRUE);
   }
 
@@ -60,4 +58,11 @@ class Question {
         questionStatement: questionStatement, correctAnswer: correctAnswer);
     return questionState;
   }
+
+  @override
+  List<Object> get props =>
+      [questionStatement, possibleAnswers, correctAnswer, givenAnswer];
+
+  @override
+  bool get stringify => true;
 }

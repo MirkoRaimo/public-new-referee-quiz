@@ -1,9 +1,14 @@
+import 'package:authentication_repository/authentication_repository.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:nuovoquizarbitri/logic/bloc/settings_bloc.dart';
+import 'package:nuovoquizarbitri/logic/bloc/auth_bloc/authentication_bloc.dart';
+import 'package:nuovoquizarbitri/logic/bloc/settings_bloc/settings_bloc.dart';
+import 'package:nuovoquizarbitri/logic/cubit/login_cubit.dart';
 import 'package:nuovoquizarbitri/logic/simple_bloc_observer.dart';
 import 'package:nuovoquizarbitri/pages/home_page.dart';
+import 'package:nuovoquizarbitri/pages/login_page.dart';
 import 'package:nuovoquizarbitri/pages/quiz_page.dart';
 import 'package:nuovoquizarbitri/pages/recap_answers_page.dart';
 import 'package:nuovoquizarbitri/pages/settings_page.dart';
@@ -18,6 +23,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HydratedBloc.storage = await HydratedStorage.build(
       storageDirectory: await getApplicationDocumentsDirectory());
+  await Firebase.initializeApp();
   Bloc.observer = SimpleBlocObserver();
   runApp(MyApp());
 }
@@ -30,35 +36,50 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final String title = APP_NAME;
+  // final String title = APP_NAME;
 
   final Store<AppState> store = createStore();
 
   final SettingsBloc _settingsBloc = new SettingsBloc();
+  final AuthenticationRepository authenticationRepository =
+      AuthenticationRepository();
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _settingsBloc,
-      child: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (context, state) {
-          return MaterialApp(
-            title: title,
-            debugShowCheckedModeBanner: false,
-            theme: handleTheme(state),
-            home: HomePage(title: title),
-            routes: {
-              HOME_ROUTE: (context) => HomePage(title: title),
-              QUIZ_ROUTE: (context) => QuizPage(),
-              TRUE_FALSE_ROUTE: (context) => TrueFalsePage(),
-              RECAP_ANSWERS_ROUTE: (context) => RecapAnswersPage(),
-              SETTINGS_ROUTE: (context) => BlocProvider.value(
-                    value: _settingsBloc,
-                    child: SettingsPage(),
-                  )
-            },
-          );
-        },
+    return RepositoryProvider.value(
+      value: authenticationRepository,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => _settingsBloc,
+          ),
+          BlocProvider(
+            create: (_) => AuthenticationBloc(
+              authenticationRepository: authenticationRepository,
+            ),
+          )
+        ],
+        child: BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (context, state) {
+            return MaterialApp(
+              title: APP_NAME,
+              debugShowCheckedModeBanner: false,
+              theme: handleTheme(state),
+              home: HomePage(),
+              routes: {
+                HOME_ROUTE: (context) => HomePage(),
+                QUIZ_ROUTE: (context) => QuizPage(),
+                TRUE_FALSE_ROUTE: (context) => TrueFalsePage(),
+                RECAP_ANSWERS_ROUTE: (context) => RecapAnswersPage(),
+                LOGIN_ROUTE: (context) => LoginPage(),
+                SETTINGS_ROUTE: (context) => BlocProvider.value(
+                      value: _settingsBloc,
+                      child: SettingsPage(),
+                    )
+              },
+            );
+          },
+        ),
       ),
     );
 

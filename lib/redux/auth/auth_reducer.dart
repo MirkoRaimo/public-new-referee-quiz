@@ -3,8 +3,10 @@ import 'package:nuovoquizarbitri/redux/auth/auth_actions.dart';
 import 'package:redux/redux.dart';
 
 final authReducer = combineReducers<User>([
-  new TypedReducer<User, LogInSuccessful>(_logIn),
-  new TypedReducer<User, LogOutSuccessful>(_logOut),
+  new TypedReducer<User, LogInSuccessful>(_logIn) as User Function(
+      User, dynamic),
+  new TypedReducer<User, LogOutSuccessful>(_logOut) as User Function(
+      User, dynamic),
 ]);
 
 User _logIn(User user, action) {
