@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:nuovoquizarbitri/logic/bloc/auth_bloc/authentication_bloc.dart';
+import 'package:nuovoquizarbitri/logic/bloc/questions_bloc/questions_bloc.dart';
 import 'package:nuovoquizarbitri/logic/bloc/settings_bloc/settings_bloc.dart';
 import 'package:nuovoquizarbitri/logic/cubit/login_cubit.dart';
 import 'package:nuovoquizarbitri/logic/simple_bloc_observer.dart';
 import 'package:nuovoquizarbitri/pages/home_page.dart';
 import 'package:nuovoquizarbitri/pages/login_page.dart';
+import 'package:nuovoquizarbitri/pages/new_question_page.dart';
 import 'package:nuovoquizarbitri/pages/quiz_page.dart';
 import 'package:nuovoquizarbitri/pages/recap_answers_page.dart';
 import 'package:nuovoquizarbitri/pages/settings_page.dart';
@@ -17,6 +19,7 @@ import 'package:nuovoquizarbitri/redux/app/app_state.dart';
 import 'package:nuovoquizarbitri/redux/store.dart';
 import 'package:nuovoquizarbitri/utils/constants.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:questions_repository/questions_repository.dart';
 import 'package:redux/redux.dart';
 
 void main() async {
@@ -41,13 +44,15 @@ class _MyAppState extends State<MyApp> {
   final Store<AppState> store = createStore();
 
   final SettingsBloc _settingsBloc = new SettingsBloc();
-  final AuthenticationRepository authenticationRepository =
+  final AuthenticationRepository _authenticationRepository =
       AuthenticationRepository();
+  final QuestionsRepository _questionsRepository =
+      FirebaseQuestionsRepository();
 
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
-      value: authenticationRepository,
+      value: _authenticationRepository,
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -55,7 +60,12 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider(
             create: (_) => AuthenticationBloc(
-              authenticationRepository: authenticationRepository,
+              authenticationRepository: _authenticationRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (_) => QuestionsBloc(
+              questionsRepository: _questionsRepository,
             ),
           )
         ],
@@ -75,7 +85,10 @@ class _MyAppState extends State<MyApp> {
                 SETTINGS_ROUTE: (context) => BlocProvider.value(
                       value: _settingsBloc,
                       child: SettingsPage(),
-                    )
+                    ),
+                NEW_QUESTION_ROUTE: (context) => NewQuestionPage(
+                      isEditing: false,
+                    ),
               },
             );
           },

@@ -7,6 +7,7 @@ const String QUIZ_ROUTE = "/Quiz";
 const String RECAP_ANSWERS_ROUTE = "/RecapAnswersPage";
 const String SETTINGS_ROUTE = "/SettingsPage";
 const String LOGIN_ROUTE = "/LoginPage";
+const String NEW_QUESTION_ROUTE = "/NewQuestionPage";
 
 // Strings used
 // (the app is for the italian market, so it doesn't need to be internationalized)
@@ -15,6 +16,7 @@ const String STR_TRUE = "Vero";
 const String STR_FALSE = "Falso";
 const String STR_IMPOSSIBLE = "Non è possibile";
 const String STR_TRUE_OR_FALSE = "Vero o Falso";
+const String STR_NEW_QUESTION = "Nuova Domanda";
 const String STR_RIGHT = "Corretto";
 const String STR_WRONG = "Sbagliato";
 const String STR_WELCOME_SENTENCE = "Benvenuto! \nSeleziona una modalità";
@@ -24,6 +26,7 @@ const String STR_DARK_MODE = "Dark Mode";
 //Assets used (Paths)
 const String PTH_LOGO_QUIZ = "assets/images/google_logo.png";
 const String PTH_LOGO_TRUE_OR_FALSE = "assets/images/flutter_logo.png";
+const String PTH_LOGO_NEW_QUESTION = "assets/images/google_logo.png";
 
 //Hero Tags
 const String HERO_TRUE = "Fab Hero True";
@@ -52,10 +55,11 @@ const MaterialColor DARK_GREEN = MaterialColor(
   },
 );
 
-const int _darkGreen0AccentValue = 0xFF53FF2E;
+//const int _darkGreen0AccentValue = 0xFF53FF2E;
+const int _darkGreen0AccentValue = 0xFF4CAF50;
 
-const MaterialColor DARK_GREEN_ACCENT = MaterialColor(
-    _darkGreen0AccentValue, <int, Color>{
+const MaterialColor DARK_GREEN_ACCENT =
+    MaterialColor(_darkGreen0AccentValue, <int, Color>{
   100: Color(0xFF7DFF61),
   200: Color(_darkGreen0AccentValue),
   400: Color(0xFF2CFA00),

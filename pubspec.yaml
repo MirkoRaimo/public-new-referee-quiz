@@ -25,6 +25,8 @@ dependencies:
     sdk: flutter
   authentication_repository:
     path: packages/authentication_repository
+  questions_repository:
+    path: packages/questions_repository
   bloc: ^7.0.0-nullsafety.3
   cloud_firestore: ^1.0.1
   cupertino_icons: ^1.0.2

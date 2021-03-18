@@ -10,6 +10,8 @@ Widget homeGrid(BuildContext context) {
       homeGridElement(context, STR_QUIZ, PTH_LOGO_QUIZ, QUIZ_ROUTE),
       homeGridElement(
           context, STR_TRUE_OR_FALSE, PTH_LOGO_TRUE_OR_FALSE, TRUE_FALSE_ROUTE),
+      homeGridElement(
+          context, STR_NEW_QUESTION, PTH_LOGO_NEW_QUESTION, NEW_QUESTION_ROUTE),
     ],
   );
 }
