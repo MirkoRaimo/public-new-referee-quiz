@@ -21,7 +21,11 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Login'),
-          actions: [Avatar()],
+          actions: [
+            Avatar(
+              disableOnPressed: true,
+            ),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
