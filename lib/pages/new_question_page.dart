@@ -5,35 +5,180 @@ import 'package:questions_repository/questions_repository.dart';
 
 typedef OnSaveCallback = Function(String task, String note);
 
-class NewQuestionPage extends StatelessWidget {
+class NewQuestionPage extends StatefulWidget {
   final bool isEditing;
   //final OnSaveCallback onSave = BlocProvider.of<QuestionsBloc>(context).add(AddQuestion(question));
-  final Question question = new Question();
 
   NewQuestionPage({Key key, this.isEditing}) : super(key: key);
 
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  @override
+  _NewQuestionPageState createState() => _NewQuestionPageState();
+}
+
+enum SingingCharacter { lafayette, jefferson }
+
+class _NewQuestionPageState extends State<NewQuestionPage> {
+  final Question question = new Question();
+
   String _task;
+
   String _note;
+
+  bool _trueOrFalseQuestion = true;
+
+  final String _possibleAnswers = 'possibleAnswers';
+
+  String _correctAnswer = 'true';
+
+  int value;
+
+  SingingCharacter _character = SingingCharacter.lafayette;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          isEditing ? 'Edit Todo' : 'Add Todo',
+          widget.isEditing ? 'Modifica una Domanda' : 'Proponi una domanda',
         ),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: NewQuestionPage._formKey,
           child: ListView(
             children: [
               TextFormField(
+                initialValue:
+                    widget.isEditing ? question.questionStatement : '',
+                maxLines: 10,
+                style: Theme.of(context).textTheme.subtitle1,
+                decoration: InputDecoration(
+                  hintText: 'Proponi una nuova domanda...',
+                ),
+                validator: (val) {
+                  return val.trim().isEmpty
+                      ? 'Questo campo non può essere vuoto'
+                      : null;
+                },
+                onSaved: (value) => _note = value,
+              ),
+              SwitchListTile.adaptive(
+                  title: Text('Vero o Falso?'),
+                  value: _trueOrFalseQuestion,
+                  onChanged: (value) => setState(() {
+                        _trueOrFalseQuestion = value;
+                      })),
+              Visibility(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      initialValue:
+                          widget.isEditing ? question.questionStatement : '',
+                      maxLines: 2,
+                      style: Theme.of(context).textTheme.subtitle1,
+                      decoration: InputDecoration(
+                        hintText: 'Risposta 1',
+                      ),
+                      validator: (val) {
+                        return val.trim().isEmpty
+                            ? 'Questo campo non può essere vuoto'
+                            : null;
+                      },
+                      onSaved: (value) => _note = value,
+                    ),
+                    TextFormField(
+                      initialValue:
+                          widget.isEditing ? question.questionStatement : '',
+                      maxLines: 2,
+                      style: Theme.of(context).textTheme.subtitle1,
+                      decoration: InputDecoration(
+                        hintText: 'Risposta 2',
+                      ),
+                      validator: (val) {
+                        return val.trim().isEmpty
+                            ? 'Questo campo non può essere vuoto'
+                            : null;
+                      },
+                      onSaved: (value) => _note = value,
+                    ),
+                    TextFormField(
+                      initialValue:
+                          widget.isEditing ? question.questionStatement : '',
+                      maxLines: 2,
+                      style: Theme.of(context).textTheme.subtitle1,
+                      decoration: InputDecoration(
+                        hintText: 'Risposta 3',
+                      ),
+                      validator: (val) {
+                        return val.trim().isEmpty
+                            ? 'Questo campo non può essere vuoto'
+                            : null;
+                      },
+                      onSaved: (value) => _note = value,
+                    ),
+                    TextFormField(
+                      initialValue:
+                          widget.isEditing ? question.questionStatement : '',
+                      maxLines: 2,
+                      style: Theme.of(context).textTheme.subtitle1,
+                      decoration: InputDecoration(
+                        hintText: 'Risposta 4',
+                      ),
+                      validator: (val) {
+                        return val.trim().isEmpty
+                            ? 'Questo campo non può essere vuoto'
+                            : null;
+                      },
+                      onSaved: (value) => _note = value,
+                    ),
+                  ],
+                ),
+                visible: !_trueOrFalseQuestion,
+              ),
+              // Column(
+              //   children: <Widget>[
+              //     RadioListTile(
+              //       title: const Text('Lafayette'),
+              //       value: SingingCharacter.lafayette,
+              //       groupValue: _character,
+              //       onChanged: (SingingCharacter value) {
+              //         setState(() {
+              //           _character = value;
+              //         });
+              //       },
+              //     ),
+              //     RadioListTile(
+              //       title: const Text('Thomas Jefferson'),
+              //       value: SingingCharacter.jefferson,
+              //       groupValue: _character,
+              //       onChanged: (SingingCharacter value) {
+              //         setState(() {
+              //           _character = value;
+              //         });
+              //       },
+              //     ),
+              //   ],
+              // ),
+
+              ListView.builder(
+                //physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return RadioListTile(
+                    value: index,
+                    groupValue: value,
+                    onChanged: (ind) => setState(() => value = ind),
+                    title: Text("Number $index"),
+                  );
+                },
+                itemCount: 3,
+              ),
+              TextFormField(
                 initialValue: '',
-                autofocus: !isEditing,
+                autofocus: !widget.isEditing,
                 style: Theme.of(context).textTheme.headline5,
                 decoration: InputDecoration(
                   hintText: 'What needs to be done?',
@@ -43,25 +188,16 @@ class NewQuestionPage extends StatelessWidget {
                 },
                 onSaved: (value) => _task = value,
               ),
-              TextFormField(
-                initialValue: isEditing ? question.questionStatement : '',
-                maxLines: 10,
-                style: Theme.of(context).textTheme.subtitle1,
-                decoration: InputDecoration(
-                  hintText: 'Additional Notes...',
-                ),
-                onSaved: (value) => _note = value,
-              )
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: isEditing ? 'Save changes' : 'Add Todo',
-        child: Icon(isEditing ? Icons.check : Icons.add),
+        tooltip: widget.isEditing ? 'Save changes' : 'Add Todo',
+        child: Icon(widget.isEditing ? Icons.check : Icons.add),
         onPressed: () {
-          if (_formKey.currentState.validate()) {
-            _formKey.currentState.save();
+          if (NewQuestionPage._formKey.currentState.validate()) {
+            NewQuestionPage._formKey.currentState.save();
             //onSave(_task, _note);
 
             BlocProvider.of<QuestionsBloc>(context)

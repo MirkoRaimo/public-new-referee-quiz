@@ -12,13 +12,22 @@ class Question extends Equatable {
   final List<String> possibleAnswers;
   final int correctAnswer; //position in the list having the possible answers
   final int givenAnswer;
-  Question({
-    this.questionStatement,
-    this.id,
-    this.possibleAnswers,
-    this.correctAnswer,
-    this.givenAnswer,
-  });
+  final String origin; //where the question was found
+  final bool trueFalseQuestion; //represents if the question is true or false
+
+  static const String ANSW_STR_TRUE = 'Vero';
+  static const String ANSW_STR_FALSE = 'Falso';
+  static const int ANSW_IDX_TRUE = 0;
+  static const int ANSW_IDX_FALSE = 1;
+
+  Question(
+      {this.questionStatement,
+      this.id,
+      this.possibleAnswers,
+      this.correctAnswer,
+      this.givenAnswer,
+      this.origin,
+      this.trueFalseQuestion});
 
   @override
   List<Object> get props {
@@ -28,6 +37,8 @@ class Question extends Equatable {
       possibleAnswers,
       correctAnswer,
       givenAnswer,
+      origin,
+      trueFalseQuestion,
     ];
   }
 
@@ -37,6 +48,8 @@ class Question extends Equatable {
     List<String> possibleAnswers,
     int correctAnswer,
     int givenAnswer,
+    String origin,
+    bool trueFalseQuestion,
   }) {
     return Question(
       questionStatement: questionStatement ?? this.questionStatement,
@@ -44,6 +57,8 @@ class Question extends Equatable {
       possibleAnswers: possibleAnswers ?? this.possibleAnswers,
       correctAnswer: correctAnswer ?? this.correctAnswer,
       givenAnswer: givenAnswer ?? this.givenAnswer,
+      origin: origin ?? this.origin,
+      trueFalseQuestion: trueFalseQuestion ?? this.trueFalseQuestion,
     );
   }
 
@@ -54,6 +69,8 @@ class Question extends Equatable {
       'possibleAnswers': possibleAnswers,
       'correctAnswer': correctAnswer,
       'givenAnswer': givenAnswer,
+      'origin': origin,
+      'trueFalseQuestion': trueFalseQuestion,
     };
   }
 
@@ -64,6 +81,8 @@ class Question extends Equatable {
       possibleAnswers: List<String>.from(map['possibleAnswers']),
       correctAnswer: map['correctAnswer'],
       givenAnswer: map['givenAnswer'],
+      origin: map['origin'],
+      trueFalseQuestion: map['trueFalseQuestion'],
     );
   }
 
@@ -74,21 +93,35 @@ class Question extends Equatable {
 
   QuestionEntity toEntity() {
     return QuestionEntity(
-      questionStatement: questionStatement ?? this.questionStatement,
-      id: id ?? this.id,
-      possibleAnswers: possibleAnswers ?? this.possibleAnswers,
-      correctAnswer: correctAnswer ?? this.correctAnswer,
-      givenAnswer: givenAnswer ?? this.givenAnswer,
-    );
+        questionStatement: questionStatement ?? this.questionStatement,
+        id: id ?? this.id,
+        possibleAnswers: possibleAnswers ?? this.possibleAnswers,
+        correctAnswer: correctAnswer ?? this.correctAnswer,
+        givenAnswer: givenAnswer ?? this.givenAnswer,
+        origin: origin ?? this.origin,
+        trueFalseQuestion: trueFalseQuestion ?? this.trueFalseQuestion);
   }
 
   static Question fromEntity(QuestionEntity entity) {
     return Question(
-      questionStatement: entity.questionStatement,
-      id: entity.id,
-      possibleAnswers: entity.possibleAnswers,
-      correctAnswer: entity.correctAnswer,
-      givenAnswer: entity.givenAnswer,
+        questionStatement: entity.questionStatement,
+        id: entity.id,
+        possibleAnswers: entity.possibleAnswers,
+        correctAnswer: entity.correctAnswer,
+        givenAnswer: entity.givenAnswer,
+        origin: entity.origin,
+        trueFalseQuestion: entity.trueFalseQuestion);
+  }
+
+  factory Question.trueFalseQuestion(Question question) {
+    return Question(
+      questionStatement: question.questionStatement,
+      id: question.id,
+      possibleAnswers: [ANSW_STR_TRUE, ANSW_STR_FALSE],
+      correctAnswer: question.correctAnswer,
+      givenAnswer: question.givenAnswer,
+      origin: question.origin,
+      trueFalseQuestion: question.trueFalseQuestion ?? true,
     );
   }
 

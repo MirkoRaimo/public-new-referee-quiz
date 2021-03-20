@@ -11,6 +11,7 @@ import 'package:nuovoquizarbitri/logic/simple_bloc_observer.dart';
 import 'package:nuovoquizarbitri/pages/home_page.dart';
 import 'package:nuovoquizarbitri/pages/login_page.dart';
 import 'package:nuovoquizarbitri/pages/new_question_page.dart';
+import 'package:nuovoquizarbitri/pages/new_question_wizard.dart';
 import 'package:nuovoquizarbitri/pages/quiz_page.dart';
 import 'package:nuovoquizarbitri/pages/recap_answers_page.dart';
 import 'package:nuovoquizarbitri/pages/settings_page.dart';
@@ -46,8 +47,17 @@ class _MyAppState extends State<MyApp> {
   final SettingsBloc _settingsBloc = new SettingsBloc();
   final AuthenticationRepository _authenticationRepository =
       AuthenticationRepository();
+  AuthenticationBloc _authenticationBloc;
   final QuestionsRepository _questionsRepository =
       FirebaseQuestionsRepository();
+
+  @override
+  void initState() {
+    _authenticationBloc = new AuthenticationBloc(
+      authenticationRepository: _authenticationRepository,
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +69,7 @@ class _MyAppState extends State<MyApp> {
             create: (context) => _settingsBloc,
           ),
           BlocProvider(
-            create: (_) => AuthenticationBloc(
-              authenticationRepository: _authenticationRepository,
-            ),
+            create: (_) => _authenticationBloc,
           ),
           BlocProvider(
             create: (_) => QuestionsBloc(
@@ -75,20 +83,24 @@ class _MyAppState extends State<MyApp> {
               title: APP_NAME,
               debugShowCheckedModeBanner: false,
               theme: handleTheme(state),
-              home: HomePage(),
+              home: BlocProvider<AuthenticationBloc>.value(
+                value: _authenticationBloc,
+                child: HomePage(),
+              ),
               routes: {
                 HOME_ROUTE: (context) => HomePage(),
                 QUIZ_ROUTE: (context) => QuizPage(),
                 TRUE_FALSE_ROUTE: (context) => TrueFalsePage(),
                 RECAP_ANSWERS_ROUTE: (context) => RecapAnswersPage(),
                 LOGIN_ROUTE: (context) => LoginPage(),
-                SETTINGS_ROUTE: (context) => BlocProvider.value(
+                SETTINGS_ROUTE: (context) => BlocProvider<SettingsBloc>.value(
                       value: _settingsBloc,
                       child: SettingsPage(),
                     ),
-                NEW_QUESTION_ROUTE: (context) => NewQuestionPage(
-                      isEditing: false,
-                    ),
+                // NEW_QUESTION_ROUTE: (context) => NewQuestionPage(
+                //       isEditing: false,
+                //     ),
+                NEW_QUESTION_ROUTE: (context) => NewQuestionWizard(),
               },
             );
           },
@@ -143,6 +155,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
+    _authenticationBloc.close();
     _settingsBloc.close();
     super.dispose();
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nuovoquizarbitri/logic/bloc/auth_bloc/authentication_bloc.dart';
+import 'package:nuovoquizarbitri/logic/bloc/questions_bloc/questions_bloc.dart';
 import 'package:nuovoquizarbitri/utils/constants.dart';
 import 'package:nuovoquizarbitri/widget/avatar.dart';
 import 'package:nuovoquizarbitri/widget/home_grid.dart';
@@ -35,27 +36,43 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: BlocListener<AuthenticationBloc, AuthenticationState>(
-          listener: (context, state) {
-            if (state.status == AuthenticationStatus.unauthenticated) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Theme.of(context).accentColor,
-                  duration: Duration(milliseconds: 1000),
-                  content: Text('Logout effettuato con successo'),
-                ),
-              );
-            }
-            if (state.status == AuthenticationStatus.authenticated) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Theme.of(context).accentColor,
-                  duration: Duration(milliseconds: 1000),
-                  content: Text('Login effettuato con successo'),
-                ),
-              );
-            }
-          },
+        body: MultiBlocListener(
+          listeners: [
+            BlocListener<AuthenticationBloc, AuthenticationState>(
+              listener: (context, state) {
+                if (state.status == AuthenticationStatus.unauthenticated) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).accentColor,
+                      duration: Duration(milliseconds: 1000),
+                      content: Text('Logout effettuato con successo'),
+                    ),
+                  );
+                }
+                if (state.status == AuthenticationStatus.authenticated) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).accentColor,
+                      duration: Duration(milliseconds: 1000),
+                      content: Text('Login effettuato con successo'),
+                    ),
+                  );
+                }
+              },
+            )
+            // BlocListener<QuestionsBloc, QuestionsState>(
+            //   listener: (context, state) {
+            //     if ( == AuthenticationStatus.authenticated) {
+            //   ScaffoldMessenger.of(context).showSnackBar(
+            //     SnackBar(
+            //       backgroundColor: Theme.of(context).accentColor,
+            //       duration: Duration(milliseconds: 1000),
+            //       content: Text('Login effettuato con successo'),
+            //     ),
+            //   );
+            //   },
+            // ),
+          ],
           child: Column(
             children: [
               SizedBox(
