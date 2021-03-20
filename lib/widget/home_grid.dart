@@ -64,7 +64,6 @@ Widget homeGridElement(BuildContext context, String elementName,
                   duration: Duration(milliseconds: 3000),
                   content: Text(
                     'Devi effettuare il login per usare questa funzionalità',
-                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               );

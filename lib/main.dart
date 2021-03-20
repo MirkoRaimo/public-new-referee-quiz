@@ -71,11 +71,11 @@ class _MyAppState extends State<MyApp> {
           BlocProvider(
             create: (_) => _authenticationBloc,
           ),
-          BlocProvider(
-            create: (_) => QuestionsBloc(
-              questionsRepository: _questionsRepository,
-            ),
-          )
+          // BlocProvider(
+          //   create: (_) => QuestionsBloc(
+          //     questionsRepository: _questionsRepository,
+          //   ),
+          // )
         ],
         child: BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, state) {
@@ -148,9 +148,16 @@ class _MyAppState extends State<MyApp> {
             brightness: Brightness.dark,
             primarySwatch: DARK_GREEN,
             accentColor: DARK_GREEN_ACCENT,
-            primaryColor: DARK_GREEN)
+            primaryColor: DARK_GREEN,
+            snackBarTheme: SnackBarThemeData(
+              contentTextStyle: TextStyle(color: Colors.black),
+            ))
         : ThemeData(
-            primarySwatch: Colors.green, accentColor: Colors.greenAccent);
+            primarySwatch: Colors.green,
+            accentColor: Colors.greenAccent,
+            snackBarTheme: SnackBarThemeData(
+              contentTextStyle: TextStyle(color: Colors.black),
+            ));
   }
 
   @override
