@@ -1,5 +1,7 @@
 import 'models/question.dart';
 
+enum QuestionType { MULTIPLE_ANSWERS, TRUE_FALSE }
+
 abstract class QuestionsRepository {
   Future<void> addNewQuestion(Question question);
 

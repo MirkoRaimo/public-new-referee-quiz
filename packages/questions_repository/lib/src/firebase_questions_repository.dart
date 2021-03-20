@@ -4,11 +4,32 @@ import 'entities/question_entity.dart';
 import 'models/question.dart';
 import 'questions_repository.dart';
 
+final CollectionReference trueFalseCollection =
+    FirebaseFirestore.instance.collection('true_false_questions');
+final CollectionReference multiAnswCollection =
+    FirebaseFirestore.instance.collection('multi_answ_questions');
+
 class FirebaseQuestionsRepository implements QuestionsRepository {
-  final questionCollection = FirebaseFirestore.instance.collection('questions');
+  CollectionReference questionCollection;
+  final QuestionType questionType;
+
+  FirebaseQuestionsRepository(
+      {this.questionCollection, this.questionType = QuestionType.TRUE_FALSE}) {
+    if (questionType == QuestionType.TRUE_FALSE) {
+      this.questionCollection = trueFalseCollection;
+    } else {
+      this.questionCollection = multiAnswCollection;
+    }
+  }
 
   @override
   Future<void> addNewQuestion(Question question) {
+    if (question.trueFalseQuestion != null &&
+        question.trueFalseQuestion == true) {
+      questionCollection = trueFalseCollection;
+    } else {
+      questionCollection = multiAnswCollection;
+    }
     return questionCollection.add(question.toEntity().toDocument());
   }
 

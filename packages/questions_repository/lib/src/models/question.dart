@@ -14,6 +14,7 @@ class Question extends Equatable {
   final int givenAnswer;
   final String origin; //where the question was found
   final bool trueFalseQuestion; //represents if the question is true or false
+  //TODO: insert insertDate and userInsert as fields
 
   static const String ANSW_STR_TRUE = 'Vero';
   static const String ANSW_STR_FALSE = 'Falso';
