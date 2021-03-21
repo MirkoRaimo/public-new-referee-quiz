@@ -78,10 +78,8 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
                       _listAnswersRaisedButtons(),
                     ],
                   )
-                : Flexible(
-                    flex: 2,
-                    child:
-                        recapAnswers(context, store.state.questionsListState));
+                : Flexible(flex: 2, child: Container());
+            //child: recapAnswers(context, store.state.questionsListState));//TODO: RIPRISTINATE
           }),
     ]);
 /*

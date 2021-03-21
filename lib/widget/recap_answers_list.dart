@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:nuovoquizarbitri/redux/models/question.dart';
-import 'package:nuovoquizarbitri/redux/questionsList/questions_list_state.dart';
+import 'package:nuovoquizarbitri/models/personal_questions.dart';
 import 'package:nuovoquizarbitri/utils/constants.dart';
+import 'package:questions_repository/questions_repository.dart';
 
-Widget recapAnswersList(BuildContext context, List<Question> questions) {
+Widget recapAnswersList(BuildContext context, List<Question> questions,
+    List<int> indexesCorrectQuestions) {
   return ListView.builder(
       shrinkWrap: true,
       itemCount:
@@ -11,7 +12,7 @@ Widget recapAnswersList(BuildContext context, List<Question> questions) {
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
           title: Text(questions[index].questionStatement),
-          trailing: questions[index].answeredCorrectly
+          trailing: indexesCorrectQuestions.contains(index)
               ? Icon(
                   Icons.check,
                   color: Colors.green,
@@ -24,7 +25,7 @@ Widget recapAnswersList(BuildContext context, List<Question> questions) {
       });
 }
 
-Widget recapAnswers(BuildContext context, QuestionsListState questionsListState,
+Widget recapAnswers(BuildContext context, PersonalQuestions personalQuestions,
     {String msgToShow}) {
   print("recapAnswers method");
   msgToShow = msgToShow ?? STR_CORRECT_ANSWERS;
@@ -34,10 +35,11 @@ Widget recapAnswers(BuildContext context, QuestionsListState questionsListState,
     mainAxisSize: MainAxisSize.min,
     children: [
       Text(
-          "$msgToShow ${questionsListState.indexesCorrectQuestions.length} / ${questionsListState.questionsList.length}"),
+          "$msgToShow ${personalQuestions.indexesCorrectQuestions.length} / ${personalQuestions.questions.length}"),
       Flexible(
           flex: 1,
-          child: recapAnswersList(context, questionsListState.questionsList))
+          child: recapAnswersList(context, personalQuestions.questions,
+              personalQuestions.indexesCorrectQuestions))
     ],
   );
 }

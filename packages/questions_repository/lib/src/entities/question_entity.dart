@@ -88,7 +88,8 @@ class QuestionEntity extends Equatable {
     return QuestionEntity(
       questionStatement: snap.data()['questionStatement'],
       id: snap.id,
-      possibleAnswers: snap.data()['possibleAnswers'],
+      //possibleAnswers: new List<String>.from(snap.data()['possibleAnswers']),
+      possibleAnswers: (snap.data()['possibleAnswers']).cast<String>(),
       correctAnswer: snap.data()['correctAnswer'],
       givenAnswer: snap.data()['givenAnswer'],
       origin: snap.data()['origin'],

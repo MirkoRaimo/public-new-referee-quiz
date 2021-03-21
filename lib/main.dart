@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:nuovoquizarbitri/logic/bloc/auth_bloc/authentication_bloc.dart';
+import 'package:nuovoquizarbitri/logic/bloc/personal_questions/personal_questions_bloc.dart';
 import 'package:nuovoquizarbitri/logic/bloc/questions_bloc/questions_bloc.dart';
 import 'package:nuovoquizarbitri/logic/bloc/settings_bloc/settings_bloc.dart';
 import 'package:nuovoquizarbitri/logic/cubit/login_cubit.dart';
@@ -90,7 +91,17 @@ class _MyAppState extends State<MyApp> {
               routes: {
                 HOME_ROUTE: (context) => HomePage(),
                 QUIZ_ROUTE: (context) => QuizPage(),
-                TRUE_FALSE_ROUTE: (context) => TrueFalsePage(),
+                //TRUE_FALSE_ROUTE: (context) => TrueFalsePage(),
+                TRUE_FALSE_ROUTE: (context) =>
+                    BlocProvider<PersonalQuestionsBloc>(
+                      create: (context) => PersonalQuestionsBloc(
+                        questionsBloc: QuestionsBloc(
+                          questionsRepository: FirebaseQuestionsRepository(
+                              questionType: QuestionType.TRUE_FALSE),
+                        ),
+                      )..add(PLoadQuestions()),
+                      child: TrueFalsePage(),
+                    ),
                 RECAP_ANSWERS_ROUTE: (context) => RecapAnswersPage(),
                 LOGIN_ROUTE: (context) => LoginPage(),
                 SETTINGS_ROUTE: (context) => BlocProvider<SettingsBloc>.value(

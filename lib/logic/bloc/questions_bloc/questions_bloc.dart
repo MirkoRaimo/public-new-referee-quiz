@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:questions_repository/questions_repository.dart';
-import 'package:questions_repository/src/models/question.dart';
 part 'questions_event.dart';
 part 'questions_state.dart';
 

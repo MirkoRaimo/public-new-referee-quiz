@@ -1,16 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
-import 'package:nuovoquizarbitri/redux/app/app_state.dart';
-import 'package:nuovoquizarbitri/redux/models/question.dart';
-import 'package:nuovoquizarbitri/redux/questionsList/questions_list_actions.dart';
-import 'package:nuovoquizarbitri/redux/questionsList/questions_list_state.dart';
-import 'package:nuovoquizarbitri/redux/store.dart';
+import 'package:nuovoquizarbitri/logic/bloc/personal_questions/personal_questions_bloc.dart';
+import 'package:nuovoquizarbitri/logic/bloc/questions_bloc/questions_bloc.dart';
 import 'package:nuovoquizarbitri/utils/constants.dart';
+import 'package:nuovoquizarbitri/widget/loading_indicator.dart';
 import 'package:nuovoquizarbitri/widget/recap_answers_list.dart';
-import 'package:redux/redux.dart';
+import 'package:questions_repository/questions_repository.dart';
 
 class TrueFalsePage extends StatefulWidget {
   TrueFalsePage({Key key}) : super(key: key);
@@ -23,70 +21,62 @@ class TrueFalsePage extends StatefulWidget {
 class _TrueFalsePageState extends State<TrueFalsePage>
     with TickerProviderStateMixin {
   List<Card> listOfCards;
-  final Store<AppState> store = createStore();
   CardController controller = CardController();
 
   @override
-  void initState() {
-    super.initState();
-    store.dispatch(GenerateTrueFalseQuestions());
-    listOfCards =
-        _generateListOfCards(store.state.questionsListState.questionsList);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return StoreProvider(
-        store: store,
-        child: Scaffold(
-            appBar: AppBar(
-              title: SelectableText(widget.title),
-            ),
-            body: _buildBody(context),
-            floatingActionButton: _buildRowFab()));
+    PersonalQuestionsState personalQuestionState =
+        context.watch<PersonalQuestionsBloc>().state;
+    return Scaffold(
+        appBar: AppBar(
+          title: SelectableText(widget.title),
+        ),
+        body: _buildBody(context),
+        floatingActionButton:
+            BlocBuilder<PersonalQuestionsBloc, QuestionsState>(
+                builder: (context, state) {
+          return _buildRowFab(state);
+        }));
   }
 
   Column _buildBody(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      StoreConnector<AppState, QuestionsListState>(
-          distinct: true, //to improve the performances
-          converter: (store) => store.state.questionsListState,
-          builder: (BuildContext context, QuestionsListState userState) {
-            return SizedBox(
-              //height: !store.state.questionsListState.answeredLastQuestion ? MediaQuery.of(context).size.height * 0.08 : 0,
-              height: MediaQuery.of(context).size.height *
-                  (!store.state.questionsListState.answeredLastQuestion
-                      ? 0.08
-                      : 0.02),
-            );
-          }),
+      BlocBuilder<PersonalQuestionsBloc, PersonalQuestionsState>(
+        builder: (context, state) {
+          return SizedBox(
+            //height: !store.state.questionsListState.answeredLastQuestion ? MediaQuery.of(context).size.height * 0.08 : 0,
+            height: MediaQuery.of(context).size.height *
+                (state is PQuestionsAllAnswered ? 0.02 : 0.08),
+          );
+        },
+      ),
       SelectableText(
         "$STR_TRUE_OR_FALSE?",
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.headline5,
       ),
-      StoreConnector<AppState, QuestionsListState>(
-          distinct: true, //to improve the performances
-          converter: (store) => store.state.questionsListState,
-          builder: (BuildContext context, QuestionsListState userState) {
-            return !store.state.questionsListState.answeredLastQuestion
-                ? _createCustomCards(context)
-                : Flexible(
-                    flex: 2,
-                    child:
-                        recapAnswers(context, store.state.questionsListState));
-          }),
+      BlocBuilder<PersonalQuestionsBloc, PersonalQuestionsState>(
+        builder: (context, state) {
+          if (state is PersonalQuestionsLoading) {
+            return LoadingIndicator();
+          } else if (state is PersonalQuestionsLoaded) {
+            listOfCards =
+                _generateListOfCards(state.personalQuestions.questions);
+            return _createCustomCards(context);
+          } else if (state is PQuestionsAllAnswered) {
+            return Flexible(
+                flex: 2, child: recapAnswers(context, state.personalQuestions));
+          }
+          return Container();
+        },
+      )
     ]);
   }
 
-  StoreConnector<AppState, QuestionsListState> _buildRowFab() {
-    return StoreConnector<AppState, QuestionsListState>(
-        converter: (store) => store.state.questionsListState,
-        builder: (BuildContext context, QuestionsListState userState) {
-          return !store.state.questionsListState.answeredLastQuestion
-              ? _rowFabRaisedButtons()
-              : Container();
-        });
+  _buildRowFab(PersonalQuestionsState state) {
+    return state is PQuestionsAllAnswered
+        ? Container()
+        : _rowFabRaisedButtons();
   }
 
   Container _createCustomCards(BuildContext context) {
@@ -138,10 +128,10 @@ class _TrueFalsePageState extends State<TrueFalsePage>
           if (orientation != CardSwipeOrientation.RECOVER) {
             switch (orientation) {
               case CardSwipeOrientation.LEFT:
-                givenAnswer = Question.FALSE;
+                givenAnswer = Question.ANSW_IDX_FALSE;
                 break;
               case CardSwipeOrientation.RIGHT:
-                givenAnswer = Question.TRUE;
+                givenAnswer = Question.ANSW_IDX_TRUE;
                 break;
 
               case CardSwipeOrientation.UP:
@@ -151,9 +141,15 @@ class _TrueFalsePageState extends State<TrueFalsePage>
               case CardSwipeOrientation.RECOVER:
                 break;
             }
-            store.dispatch(SetQuestionsListContext(context: innerContext));
-            store.dispatch(AnswerQuestion(
-                currentQuestion: index, givenAnswer: givenAnswer));
+
+            context
+                .read<PersonalQuestionsBloc>()
+                .add(AnswerQuestion(index, givenAnswer));
+
+            //TODO: REMOVE
+            // store.dispatch(SetQuestionsListContext(context: innerContext));
+            // store.dispatch(AnswerQuestion(
+            //     currentQuestion: index, givenAnswer: givenAnswer));
           }
         });
   }
