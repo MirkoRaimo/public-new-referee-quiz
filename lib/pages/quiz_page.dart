@@ -1,16 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
-import 'package:nuovoquizarbitri/redux/app/app_state.dart';
-import 'package:nuovoquizarbitri/redux/models/question.dart';
-import 'package:nuovoquizarbitri/redux/questionsList/questions_list_actions.dart';
-import 'package:nuovoquizarbitri/redux/questionsList/questions_list_state.dart';
-import 'package:nuovoquizarbitri/redux/store.dart';
+import 'package:nuovoquizarbitri/logic/bloc/personal_questions/personal_questions_bloc.dart';
 import 'package:nuovoquizarbitri/utils/constants.dart';
+import 'package:nuovoquizarbitri/widget/loading_indicator.dart';
 import 'package:nuovoquizarbitri/widget/recap_answers_list.dart';
-import 'package:redux/redux.dart';
+import 'package:questions_repository/questions_repository.dart';
 
 class QuizPage extends StatefulWidget {
   QuizPage({Key key}) : super(key: key);
@@ -22,40 +19,18 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
   List<Card> listOfCards;
-  final Store<AppState> store = createStore();
   CardController controller = CardController();
-  int currentQuestion;
-
-  @override
-  void initState() {
-    super.initState();
-    store.dispatch(GenerateQuizQuestions());
-    currentQuestion = 0;
-    listOfCards =
-        _generateListOfCards(store.state.questionsListState.questionsList);
-  }
+  int currentQuestion = 0;
 
   @override
   Widget build(BuildContext context) {
-    return StoreProvider(
-        store: store,
-        child: Scaffold(
-          appBar: AppBar(
-            title: SelectableText(widget.title),
-          ),
-          body: _buildBody(context),
-        ));
-  }
-
-/*  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: SelectableText(widget.title),
       ),
       body: _buildBody(context),
     );
-  }*/
+  }
 
   Column _buildBody(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -67,26 +42,29 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
       ),
       //_sizedBoxDivider(),
 
-      StoreConnector<AppState, QuestionsListState>(
-          converter: (store) => store.state.questionsListState,
-          builder: (BuildContext context, QuestionsListState userState) {
-            return !store.state.questionsListState.answeredLastQuestion
-                ? Column(
-                    children: [
-                      _createCustomCards(context),
-                      _sizedBoxDivider(),
-                      _listAnswersRaisedButtons(),
-                    ],
-                  )
-                : Flexible(flex: 2, child: Container());
-            //child: recapAnswers(context, store.state.questionsListState));//TODO: RIPRISTINATE
-          }),
+      BlocBuilder<PersonalQuestionsBloc, PersonalQuestionsState>(
+        builder: (context, state) {
+          if (state is PersonalQuestionsLoading) {
+            return LoadingIndicator();
+          } else if (state is PersonalQuestionsLoaded) {
+            listOfCards =
+                _generateListOfCards(state.personalQuestions.questions);
+
+            return Column(
+              children: [
+                _createCustomCards(context),
+                _sizedBoxDivider(),
+                _listAnswersRaisedButtons(state.personalQuestions.questions),
+              ],
+            );
+          } else if (state is PQuestionsAllAnswered) {
+            return Flexible(
+                flex: 2, child: recapAnswers(context, state.personalQuestions));
+          }
+          return Container();
+        },
+      )
     ]);
-/*
-    _createCustomCards(context),
-    _sizedBoxDivider(),
-    _listAnswersRaisedButtons()
-    ]);*/
   }
 
   Container _createCustomCards(BuildContext context) {
@@ -103,43 +81,36 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
           final double _cardMinWidth = MediaQuery.of(context).size.width * 0.8;
           final double _cardMinHeight = MediaQuery.of(context).size.width * 0.6;
 
-          store.dispatch(SetQuestionsListContext(context: innerContext));
-          return StoreProvider(
-            store: store,
-            child: TinderSwapCard(
-                swipeUp: false,
-                swipeDown: false,
-                orientation: AmassOrientation.BOTTOM,
-                totalNum: listOfCards.length,
-                stackNum: 3,
-                swipeEdge: _cardSwipeEdge,
-                maxWidth: _cardMaxWidth,
-                maxHeight: _cardMaxHeight,
-                minWidth: _cardMinWidth,
-                minHeight: _cardMinHeight,
-                cardBuilder: (context, index) {
-                  return listOfCards[index];
-                },
-                cardController: controller,
-                swipeUpdateCallback:
-                    (DragUpdateDetails details, Alignment align) {
-                  /// Get swiping card's alignment
-                  if (align.x < 0) {
-                    //Card is LEFT swiping
+          return TinderSwapCard(
+              swipeUp: false,
+              swipeDown: false,
+              orientation: AmassOrientation.BOTTOM,
+              totalNum: listOfCards.length,
+              stackNum: 3,
+              swipeEdge: _cardSwipeEdge,
+              maxWidth: _cardMaxWidth,
+              maxHeight: _cardMaxHeight,
+              minWidth: _cardMinWidth,
+              minHeight: _cardMinHeight,
+              cardBuilder: (context, index) {
+                return listOfCards[index];
+              },
+              cardController: controller,
+              swipeUpdateCallback:
+                  (DragUpdateDetails details, Alignment align) {
+                /// Get swiping card's alignment
+                if (align.x < 0) {
+                  //Card is LEFT swiping
 
-                  } else if (align.x > 0) {
-                    //Card is RIGHT swiping
-                  }
-                },
-                swipeCompleteCallback:
-                    (CardSwipeOrientation orientation, int index) {
-                  // Get orientation & index of swiped card!
-                  currentQuestion = ++index;
-//                      if (store.state.questionsListState.answeredLastQuestion){
-//                        Navigator.pushNamed(context, RECAP_ANSWERS_ROUTE);
-//                      }
-                }),
-          );
+                } else if (align.x > 0) {
+                  //Card is RIGHT swiping
+                }
+              },
+              swipeCompleteCallback:
+                  (CardSwipeOrientation orientation, int index) {
+                // Get orientation & index of swiped card!
+                currentQuestion = ++index;
+              });
         }));
   }
 
@@ -160,41 +131,39 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
     return listOfCards;
   }
 
-  Widget _listAnswersRaisedButtons() {
-    List<Question> questionsList = store.state.questionsListState.questionsList;
+  Widget _listAnswersRaisedButtons(List<Question> questionsList) {
     return ListView.builder(
       //physics: NeverScrollableScrollPhysics(),
       padding: EdgeInsets.all(16.0),
       shrinkWrap: true,
       itemBuilder: (_, index) => _answerWidget(
-          questionsList[currentQuestion].possibleAnswers[index], index),
+          questionsList[currentQuestion].possibleAnswers[index],
+          index), //todo: fix first arguments
       itemCount: questionsList[currentQuestion].possibleAnswers.length,
     );
   }
 
-  Widget _answerWidget(String answer, int index) {
+  Widget _answerWidget(String answerLablel, int indexAnswer) {
     List<MaterialAccentColor> accentColors = [
       Colors.blueAccent,
       Colors.orangeAccent,
       Colors.greenAccent,
       Colors.pinkAccent
     ];
-    MaterialAccentColor currentAccentColor = accentColors[index];
+    MaterialAccentColor currentAccentColor = accentColors[indexAnswer];
     return RaisedButton(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),
           side: BorderSide(color: currentAccentColor)),
       onPressed: () {
-        if (currentQuestion <
-            store.state.questionsListState.questionsList.length) {
-          controller.triggerLeft();
-          store.dispatch(AnswerQuestion(
-              currentQuestion: currentQuestion, givenAnswer: index));
-        }
+        controller.triggerLeft();
+        context
+            .read<PersonalQuestionsBloc>()
+            .add(AnswerQuestion(currentQuestion, indexAnswer));
       },
       color: Colors.white,
       textColor: currentAccentColor,
-      child: Text(answer, style: TextStyle(fontSize: 14)),
+      child: Text(answerLablel, style: TextStyle(fontSize: 14)),
     );
   }
 
