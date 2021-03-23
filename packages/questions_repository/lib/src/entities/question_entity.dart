@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:questions_repository/src/models/questionUser.dart';
 
 class QuestionEntity extends Equatable {
   final String questionStatement;
@@ -11,6 +12,10 @@ class QuestionEntity extends Equatable {
   final int givenAnswer;
   final String origin;
   final bool trueFalseQuestion;
+  final QuestionUser utIns;
+  final QuestionUser utVar;
+  final Timestamp dtIns;
+  final Timestamp dtVar;
 
   QuestionEntity({
     this.questionStatement,
@@ -20,6 +25,10 @@ class QuestionEntity extends Equatable {
     this.givenAnswer,
     this.origin,
     this.trueFalseQuestion,
+    this.utIns,
+    this.utVar,
+    this.dtIns,
+    this.dtVar,
   });
 
   @override
@@ -32,6 +41,10 @@ class QuestionEntity extends Equatable {
       givenAnswer,
       origin,
       trueFalseQuestion,
+      utIns,
+      utVar,
+      dtIns,
+      dtVar,
     ];
   }
 
@@ -43,6 +56,10 @@ class QuestionEntity extends Equatable {
     int givenAnswer,
     String origin,
     bool trueFalseQuestion,
+    QuestionUser utIns,
+    QuestionUser utVar,
+    Timestamp dtIns,
+    Timestamp dtVar,
   }) {
     return QuestionEntity(
       questionStatement: questionStatement ?? this.questionStatement,
@@ -52,6 +69,10 @@ class QuestionEntity extends Equatable {
       givenAnswer: givenAnswer ?? this.givenAnswer,
       origin: origin ?? this.origin,
       trueFalseQuestion: trueFalseQuestion ?? this.trueFalseQuestion,
+      utIns: utIns ?? this.utIns,
+      utVar: utVar ?? this.utVar,
+      dtIns: dtIns ?? this.dtIns,
+      dtVar: dtVar ?? this.dtVar,
     );
   }
 
@@ -64,6 +85,10 @@ class QuestionEntity extends Equatable {
       'givenAnswer': givenAnswer,
       'origin': origin,
       'trueFalseQuestion': trueFalseQuestion,
+      'utIns': utIns,
+      'utVar': utVar,
+      'dtIns': dtIns,
+      'dtVar': dtVar,
     };
   }
 
@@ -76,6 +101,10 @@ class QuestionEntity extends Equatable {
       givenAnswer: map['givenAnswer'],
       origin: map['origin'],
       trueFalseQuestion: map['trueFalseQuestion'],
+      utIns: map['utIns'],
+      utVar: map['utVar'],
+      dtIns: map['dtIns'],
+      dtVar: map['dtVar'],
     );
   }
 
@@ -94,6 +123,10 @@ class QuestionEntity extends Equatable {
       givenAnswer: snap.data()['givenAnswer'],
       origin: snap.data()['origin'],
       trueFalseQuestion: snap.data()['trueFalseQuestion'],
+      utIns: snap.data()['utIns'],
+      utVar: snap.data()['utVar'],
+      dtIns: snap.data()['dtIns'],
+      dtVar: snap.data()['dtVar'],
     );
   }
 
@@ -104,7 +137,11 @@ class QuestionEntity extends Equatable {
       'correctAnswer': correctAnswer,
       'givenAnswer': givenAnswer,
       'origin': origin,
-      'trueFalseQuestion': trueFalseQuestion
+      'trueFalseQuestion': trueFalseQuestion,
+      'utIns': utIns,
+      'utVar': utVar,
+      'dtIns': dtIns,
+      'dtVar': dtVar,
     };
   }
 

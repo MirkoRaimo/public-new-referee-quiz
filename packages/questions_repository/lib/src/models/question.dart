@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:questions_repository/src/models/questionUser.dart';
 
 import '../entities/question_entity.dart';
 
@@ -14,21 +16,29 @@ class Question extends Equatable {
   final int givenAnswer;
   final String origin; //where the question was found
   final bool trueFalseQuestion; //represents if the question is true or false
-  //TODO: insert insertDate and userInsert as fields
+  final QuestionUser utIns;
+  final QuestionUser utVar;
+  final Timestamp dtIns;
+  final Timestamp dtVar;
 
   static const String ANSW_STR_TRUE = 'Vero';
   static const String ANSW_STR_FALSE = 'Falso';
   static const int ANSW_IDX_TRUE = 0;
   static const int ANSW_IDX_FALSE = 1;
 
-  Question(
-      {this.questionStatement,
-      this.id,
-      this.possibleAnswers,
-      this.correctAnswer,
-      this.givenAnswer,
-      this.origin,
-      this.trueFalseQuestion});
+  Question({
+    this.questionStatement,
+    this.id,
+    this.possibleAnswers,
+    this.correctAnswer,
+    this.givenAnswer,
+    this.origin,
+    this.trueFalseQuestion,
+    this.utIns,
+    this.utVar,
+    this.dtIns,
+    this.dtVar,
+  });
 
   @override
   List<Object> get props {
@@ -40,6 +50,10 @@ class Question extends Equatable {
       givenAnswer,
       origin,
       trueFalseQuestion,
+      utIns,
+      utVar,
+      dtIns,
+      dtVar,
     ];
   }
 
@@ -51,6 +65,10 @@ class Question extends Equatable {
     int givenAnswer,
     String origin,
     bool trueFalseQuestion,
+    QuestionUser utIns,
+    QuestionUser utVar,
+    Timestamp dtIns,
+    Timestamp dtVar,
   }) {
     return Question(
       questionStatement: questionStatement ?? this.questionStatement,
@@ -60,6 +78,10 @@ class Question extends Equatable {
       givenAnswer: givenAnswer ?? this.givenAnswer,
       origin: origin ?? this.origin,
       trueFalseQuestion: trueFalseQuestion ?? this.trueFalseQuestion,
+      utIns: utIns ?? this.utIns,
+      utVar: utVar ?? this.utVar,
+      dtIns: dtIns ?? this.dtIns,
+      dtVar: dtVar ?? this.dtVar,
     );
   }
 
@@ -72,6 +94,10 @@ class Question extends Equatable {
       'givenAnswer': givenAnswer,
       'origin': origin,
       'trueFalseQuestion': trueFalseQuestion,
+      'utIns': utIns,
+      'utVar': utVar,
+      'dtIns': dtIns,
+      'dtVar': dtVar,
     };
   }
 
@@ -84,6 +110,10 @@ class Question extends Equatable {
       givenAnswer: map['givenAnswer'],
       origin: map['origin'],
       trueFalseQuestion: map['trueFalseQuestion'],
+      utIns: map['utIns'],
+      utVar: map['utVar'],
+      dtIns: map['dtIns'],
+      dtVar: map['dtVar'],
     );
   }
 
@@ -100,18 +130,27 @@ class Question extends Equatable {
         correctAnswer: correctAnswer ?? this.correctAnswer,
         givenAnswer: givenAnswer ?? this.givenAnswer,
         origin: origin ?? this.origin,
-        trueFalseQuestion: trueFalseQuestion ?? this.trueFalseQuestion);
+        trueFalseQuestion: trueFalseQuestion ?? this.trueFalseQuestion,
+        utIns: utIns ?? this.utIns,
+        utVar: utVar ?? this.utVar,
+        dtIns: dtIns ?? this.dtIns,
+        dtVar: dtVar ?? this.dtVar);
   }
 
   static Question fromEntity(QuestionEntity entity) {
     return Question(
-        questionStatement: entity.questionStatement,
-        id: entity.id,
-        possibleAnswers: entity.possibleAnswers,
-        correctAnswer: entity.correctAnswer,
-        givenAnswer: entity.givenAnswer,
-        origin: entity.origin,
-        trueFalseQuestion: entity.trueFalseQuestion);
+      questionStatement: entity.questionStatement,
+      id: entity.id,
+      possibleAnswers: entity.possibleAnswers,
+      correctAnswer: entity.correctAnswer,
+      givenAnswer: entity.givenAnswer,
+      origin: entity.origin,
+      trueFalseQuestion: entity.trueFalseQuestion,
+      utIns: entity.utIns,
+      utVar: entity.utVar,
+      dtIns: entity.dtIns,
+      dtVar: entity.dtVar,
+    );
   }
 
   factory Question.trueFalseQuestion(Question question) {
@@ -123,6 +162,10 @@ class Question extends Equatable {
       givenAnswer: question.givenAnswer,
       origin: question.origin,
       trueFalseQuestion: question.trueFalseQuestion ?? true,
+      utIns: question.utIns,
+      utVar: question.utVar,
+      dtIns: question.dtIns,
+      dtVar: question.dtVar,
     );
   }
 
