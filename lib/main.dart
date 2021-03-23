@@ -49,8 +49,6 @@ class _MyAppState extends State<MyApp> {
   final AuthenticationRepository _authenticationRepository =
       AuthenticationRepository();
   AuthenticationBloc _authenticationBloc;
-  final QuestionsRepository _questionsRepository =
-      FirebaseQuestionsRepository();
 
   @override
   void initState() {
@@ -72,11 +70,6 @@ class _MyAppState extends State<MyApp> {
           BlocProvider(
             create: (_) => _authenticationBloc,
           ),
-          // BlocProvider(
-          //   create: (_) => QuestionsBloc(
-          //     questionsRepository: _questionsRepository,
-          //   ),
-          // )
         ],
         child: BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, state) {
@@ -99,8 +92,6 @@ class _MyAppState extends State<MyApp> {
                       )..add(PLoadQuestions()),
                       child: QuizPage(),
                     ),
-                //QUIZ_ROUTE: (context) => QuizPage(),
-                //TRUE_FALSE_ROUTE: (context) => TrueFalsePage(),
                 TRUE_FALSE_ROUTE: (context) =>
                     BlocProvider<PersonalQuestionsBloc>(
                       create: (context) => PersonalQuestionsBloc(
@@ -127,39 +118,6 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
-
-/*
-    return StoreProvider(
-      store: store,
-      child: StoreConnector<AppState, SettingsState>(
-          distinct: true, //to improve the performances
-          converter: (store) => store.state.settingsState,
-          builder: (BuildContext context, SettingsState settingsState) {
-            return MaterialApp(
-              title: title,
-              debugShowCheckedModeBanner: false,
-              theme: _handleInitialDarkMode(
-                      context, store.state.settingsState.darkMode)
-                  ? ThemeData(
-                      brightness: Brightness.dark,
-                      primarySwatch: DARK_GREEN,
-                      accentColor: DARK_GREEN_ACCENT,
-                      primaryColor: DARK_GREEN)
-                  : ThemeData(
-                      primarySwatch: Colors.green,
-                      accentColor: Colors.greenAccent),
-              home: HomePage(title: title),
-              routes: {
-                HOME_ROUTE: (context) => HomePage(title: title),
-                QUIZ_ROUTE: (context) => QuizPage(),
-                TRUE_FALSE_ROUTE: (context) => TrueFalsePage(),
-                RECAP_ANSWERS_ROUTE: (context) => RecapAnswersPage(),
-                SETTINGS_ROUTE: (context) => SettingsPage(),
-              },
-            );
-          }),
-    );
-*/
   }
 
   ThemeData handleTheme(SettingsState state) {

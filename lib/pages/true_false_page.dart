@@ -25,8 +25,6 @@ class _TrueFalsePageState extends State<TrueFalsePage>
 
   @override
   Widget build(BuildContext context) {
-    PersonalQuestionsState personalQuestionState =
-        context.watch<PersonalQuestionsBloc>().state;
     return Scaffold(
         appBar: AppBar(
           title: SelectableText(widget.title),
@@ -133,7 +131,6 @@ class _TrueFalsePageState extends State<TrueFalsePage>
               case CardSwipeOrientation.RIGHT:
                 givenAnswer = Question.ANSW_IDX_TRUE;
                 break;
-
               case CardSwipeOrientation.UP:
                 break;
               case CardSwipeOrientation.DOWN:
@@ -145,11 +142,6 @@ class _TrueFalsePageState extends State<TrueFalsePage>
             context
                 .read<PersonalQuestionsBloc>()
                 .add(AnswerQuestion(index, givenAnswer));
-
-            //TODO: REMOVE
-            // store.dispatch(SetQuestionsListContext(context: innerContext));
-            // store.dispatch(AnswerQuestion(
-            //     currentQuestion: index, givenAnswer: givenAnswer));
           }
         });
   }
