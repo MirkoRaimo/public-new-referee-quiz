@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:questions_repository/src/models/questionUser.dart';
 
 import '../entities/question_entity.dart';
 
@@ -16,8 +16,8 @@ class Question extends Equatable {
   final int givenAnswer;
   final String origin; //where the question was found
   final bool trueFalseQuestion; //represents if the question is true or false
-  final QuestionUser utIns;
-  final QuestionUser utVar;
+  final User utIns;
+  final User utVar;
   final Timestamp dtIns;
   final Timestamp dtVar;
 
@@ -65,8 +65,8 @@ class Question extends Equatable {
     int givenAnswer,
     String origin,
     bool trueFalseQuestion,
-    QuestionUser utIns,
-    QuestionUser utVar,
+    User utIns,
+    User utVar,
     Timestamp dtIns,
     Timestamp dtVar,
   }) {

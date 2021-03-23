@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nuovoquizarbitri/logic/bloc/auth_bloc/authentication_bloc.dart';
 import 'package:nuovoquizarbitri/logic/bloc/questions_bloc/questions_bloc.dart';
 import 'package:questions_repository/questions_repository.dart';
 
@@ -169,7 +171,9 @@ class _NewQuestionQeAFormState extends State<NewQuestionQeAForm> {
             context.read<NewQuestionWizardBloc>().add(
                 NewQuestionWizardQeASubmitted(
                     question: question.copyWith(
-                        trueFalseQuestion: _trueOrFalseQuestion)));
+                        trueFalseQuestion: _trueOrFalseQuestion,
+                        utIns: context.read<AuthenticationBloc>().state.user,
+                        dtIns: Timestamp.now())));
           }
         },
       ),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -16,6 +18,18 @@ class User extends Equatable {
   })   : assert(email != null),
         assert(id != null);
 
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      email: map['email']?.toString(),
+      id: map['id']?.toString(),
+      name: map['name']?.toString() ?? 'unknown',
+      photo: map['photo']?.toString() ?? 'unknown',
+    );
+  }
+
+  factory User.fromJson(String source) =>
+      User.fromMap(json.decode(source) as Map<String, dynamic>);
+
   /// The current user's email address.
   final String? email;
 
@@ -33,4 +47,22 @@ class User extends Equatable {
 
   @override
   List<Object?> get props => [email, id, name, photo];
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'email': email,
+      'id': id,
+      'name': name,
+      'photo': photo,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
+
+  Map<String, String> toNestedJson() => {
+        'email': email?.toString() ?? '',
+        'id': id?.toString() ?? '',
+        'name': name?.toString() ?? '',
+        'photo': photo?.toString() ?? '',
+      };
 }

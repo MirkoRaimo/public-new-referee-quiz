@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:questions_repository/src/models/questionUser.dart';
 
 class QuestionEntity extends Equatable {
   final String questionStatement;
@@ -12,8 +12,8 @@ class QuestionEntity extends Equatable {
   final int givenAnswer;
   final String origin;
   final bool trueFalseQuestion;
-  final QuestionUser utIns;
-  final QuestionUser utVar;
+  final User utIns;
+  final User utVar;
   final Timestamp dtIns;
   final Timestamp dtVar;
 
@@ -56,8 +56,8 @@ class QuestionEntity extends Equatable {
     int givenAnswer,
     String origin,
     bool trueFalseQuestion,
-    QuestionUser utIns,
-    QuestionUser utVar,
+    User utIns,
+    User utVar,
     Timestamp dtIns,
     Timestamp dtVar,
   }) {
@@ -123,8 +123,12 @@ class QuestionEntity extends Equatable {
       givenAnswer: snap.data()['givenAnswer'],
       origin: snap.data()['origin'],
       trueFalseQuestion: snap.data()['trueFalseQuestion'],
-      utIns: snap.data()['utIns'],
-      utVar: snap.data()['utVar'],
+      utIns: snap.data()['utIns'] != null
+          ? User.fromMap(snap.data()['utIns'])
+          : null,
+      utVar: snap.data()['utVar'] != null
+          ? User.fromMap(snap.data()['utVar'])
+          : null,
       dtIns: snap.data()['dtIns'],
       dtVar: snap.data()['dtVar'],
     );
@@ -138,8 +142,8 @@ class QuestionEntity extends Equatable {
       'givenAnswer': givenAnswer,
       'origin': origin,
       'trueFalseQuestion': trueFalseQuestion,
-      'utIns': utIns,
-      'utVar': utVar,
+      'utIns': utIns?.toNestedJson(),
+      'utVar': utVar?.toNestedJson(),
       'dtIns': dtIns,
       'dtVar': dtVar,
     };
