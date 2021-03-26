@@ -1,16 +1,18 @@
 # nuovoquizarbitri
 
+The application is in Italian because it is designed for the italian market.
+
 L'applicazione ideale per gli arbitri del futuro!
 
-## Getting Started
+You can find below some screenshot of the app.
+<br>For all the screenshots, visit the folder: https://github.com/MirkoRaimo/public-new-referee-quiz/tree/master/app_showcase
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img src="https://github.com/MirkoRaimo/public-new-referee-quiz/blob/master/app_showcase/draggable_true_false.png" height="800">
+<img src="https://github.com/MirkoRaimo/public-new-referee-quiz/blob/master/app_showcase/draggable_multi_answers.png" height="800">
+<img src="https://github.com/MirkoRaimo/public-new-referee-quiz/blob/master/app_showcase/home_dark_user_authenicated.png" height="800">
+<img src="https://github.com/MirkoRaimo/public-new-referee-quiz/blob/master/app_showcase/home_light_user_authenicated.png" height="800">
+<img src="https://github.com/MirkoRaimo/public-new-referee-quiz/blob/master/app_showcase/wizard_1.png" height="800">
+<img src="https://github.com/MirkoRaimo/public-new-referee-quiz/blob/master/app_showcase/wizard_2.png" height="800">
+<img src="https://github.com/MirkoRaimo/public-new-referee-quiz/blob/master/app_showcase/wizard_3.png" height="800">
+<img src="https://github.com/MirkoRaimo/public-new-referee-quiz/blob/master/app_showcase/functionality_blocked_for_unauthenticated_users.png" height="800">
+<img src="https://github.com/MirkoRaimo/public-new-referee-quiz/blob/master/app_showcase/settings_dark_mode.png" height="800">
