@@ -4,8 +4,9 @@ The application is in Italian because it is designed for the italian market.
 
 L'applicazione ideale per gli arbitri del futuro!
 
-You can find below some screenshot of the app.
-<br>For all the screenshots, visit the folder: https://github.com/MirkoRaimo/public-new-referee-quiz/tree/master/app_showcase
+You can find below some screenshot of the app.<br>
+For all the screenshots, visit the folder:<br>
+https://github.com/MirkoRaimo/public-new-referee-quiz/tree/master/app_showcase
 
 <img src="https://github.com/MirkoRaimo/public-new-referee-quiz/blob/master/app_showcase/draggable_true_false.png" height="800">
 <img src="https://github.com/MirkoRaimo/public-new-referee-quiz/blob/master/app_showcase/draggable_multi_answers.png" height="800">
