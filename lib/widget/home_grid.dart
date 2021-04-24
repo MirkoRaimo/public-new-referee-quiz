@@ -8,6 +8,7 @@ Widget homeGrid(BuildContext context) {
       context.watch<AuthenticationBloc>().state.status;
 
   return ListView(
+    shrinkWrap: true,
     children: [
       GridView.count(
         crossAxisCount: 2,

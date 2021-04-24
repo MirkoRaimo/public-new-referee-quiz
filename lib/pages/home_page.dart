@@ -73,19 +73,18 @@ class _HomePageState extends State<HomePage> {
             //   },
             // ),
           ],
-          child: Column(
+          child: ListView(
+            physics: NeverScrollableScrollPhysics(),
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.08,
+                height: MediaQuery.of(context).size.height * 0.04,
               ),
-              Flexible(
-                  flex: 1,
-                  child: SelectableText(
-                    STR_WELCOME_SENTENCE,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline5,
-                  )),
-              Flexible(flex: 2, child: Center(child: homeGrid(context))),
+              SelectableText(
+                STR_WELCOME_SENTENCE,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              Center(child: homeGrid(context)),
             ],
           ),
         ));
