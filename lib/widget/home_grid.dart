@@ -7,18 +7,32 @@ Widget homeGrid(BuildContext context) {
   final AuthenticationStatus userStatus =
       context.watch<AuthenticationBloc>().state.status;
 
-  return GridView.count(
-    crossAxisCount: 2,
-    shrinkWrap: true,
-    physics: NeverScrollableScrollPhysics(),
-    children: <Widget>[
-      homeGridElement(context, STR_QUIZ, PTH_LOGO_QUIZ, QUIZ_ROUTE),
-      homeGridElement(
-          context, STR_TRUE_OR_FALSE, PTH_LOGO_TRUE_OR_FALSE, TRUE_FALSE_ROUTE),
-      homeGridElement(
-          context, STR_NEW_QUESTION, PTH_LOGO_NEW_QUESTION, NEW_QUESTION_ROUTE,
-          disableButton: userStatus != AuthenticationStatus.authenticated,
-          alternativeRoot: LOGIN_ROUTE),
+  return ListView(
+    children: [
+      GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          homeGridElement(context, STR_LOCAL_TRUE_OR_FALSE,
+              PTH_LOGO_TRUE_OR_FALSE, LOCAL_TRUE_FALSE_ROUTE),
+        ],
+      ),
+      Divider(), //TODO: Add a better divider to say that the elements below are in beta version
+      GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          homeGridElement(context, STR_QUIZ, PTH_LOGO_QUIZ, QUIZ_ROUTE),
+          homeGridElement(context, STR_TRUE_OR_FALSE, PTH_LOGO_TRUE_OR_FALSE,
+              TRUE_FALSE_ROUTE),
+          homeGridElement(context, STR_NEW_QUESTION, PTH_LOGO_NEW_QUESTION,
+              NEW_QUESTION_ROUTE,
+              disableButton: userStatus != AuthenticationStatus.authenticated,
+              alternativeRoot: LOGIN_ROUTE),
+        ],
+      ),
     ],
   );
 }

@@ -85,12 +85,24 @@ class _MyAppState extends State<MyApp> {
                 HOME_ROUTE: (context) => HomePage(),
                 QUIZ_ROUTE: (context) => BlocProvider<PersonalQuestionsBloc>(
                       create: (context) => PersonalQuestionsBloc(
+                        //TODO: fix ansering the last question
                         questionsBloc: QuestionsBloc(
                           questionsRepository: FirebaseQuestionsRepository(
                               questionType: QuestionType.MULTIPLE_ANSWERS),
                         ),
                       )..add(PLoadQuestions()),
                       child: QuizPage(),
+                    ),
+                LOCAL_TRUE_FALSE_ROUTE: (context) =>
+                    BlocProvider<PersonalQuestionsBloc>(
+                      create: (context) => PersonalQuestionsBloc(
+                        questionsBloc: QuestionsBloc(
+                          // questionsRepository: FirebaseQuestionsRepository(
+                          //     questionType: QuestionType.TRUE_FALSE),
+                          questionsRepository: LocalQuestionsRepository(),
+                        ),
+                      )..add(PLoadTrueFalseQuestions()),
+                      child: TrueFalsePage(),
                     ),
                 TRUE_FALSE_ROUTE: (context) =>
                     BlocProvider<PersonalQuestionsBloc>(

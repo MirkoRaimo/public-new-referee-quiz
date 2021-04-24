@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 //Routes
 const String HOME_ROUTE = "/Home";
+const String LOCAL_TRUE_FALSE_ROUTE = "/Local_True_False";
 const String TRUE_FALSE_ROUTE = "/True_False";
 const String QUIZ_ROUTE = "/Quiz";
 const String RECAP_ANSWERS_ROUTE = "/RecapAnswersPage";
@@ -11,11 +12,12 @@ const String NEW_QUESTION_ROUTE = "/NewQuestionPage";
 
 // Strings used
 // (the app is for the italian market, so it doesn't need to be internationalized)
+const String STR_LOCAL_TRUE_OR_FALSE = "Vero o Falso";
 const String STR_QUIZ = "Quiz";
 const String STR_TRUE = "Vero";
 const String STR_FALSE = "Falso";
 const String STR_IMPOSSIBLE = "Non è possibile";
-const String STR_TRUE_OR_FALSE = "Vero o Falso";
+const String STR_TRUE_OR_FALSE = "Vero o Falso (community)";
 const String STR_NEW_QUESTION = "Nuova Domanda";
 const String STR_RIGHT = "Corretto";
 const String STR_WRONG = "Sbagliato";
