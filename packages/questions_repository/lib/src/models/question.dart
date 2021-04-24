@@ -13,9 +13,11 @@ class Question extends Equatable {
   final String id;
   final List<String> possibleAnswers;
   final int correctAnswer; //position in the list having the possible answers
+  final String strCorrectAnswer; //Correct answer provided as string
   final int givenAnswer;
   final String origin; //where the question was found
   final bool trueFalseQuestion; //represents if the question is true or false
+  final int ruleRef; //reference to the rule id
   final User utIns;
   final User utVar;
   final Timestamp dtIns;
@@ -30,15 +32,47 @@ class Question extends Equatable {
     this.questionStatement,
     this.id,
     this.possibleAnswers,
-    this.correctAnswer,
+    correctAnswer,
+    this.strCorrectAnswer,
     this.givenAnswer,
     this.origin,
     this.trueFalseQuestion,
+    this.ruleRef,
     this.utIns,
     this.utVar,
     this.dtIns,
     this.dtVar,
-  });
+  }) : correctAnswer =
+            calcTrueFalseCorrectAnswer(strCorrectAnswer, correctAnswer);
+
+  static int calcTrueFalseCorrectAnswer(
+      String strCorrectAnswer, int correctAnswer) {
+    if (strCorrectAnswer != null && strCorrectAnswer.isNotEmpty) {
+      switch (strCorrectAnswer.toLowerCase()) {
+        case "true":
+        case "vero":
+          return ANSW_IDX_TRUE;
+        case "false":
+        case "falso":
+          return ANSW_IDX_FALSE;
+      }
+    }
+    return correctAnswer;
+  }
+
+  static bool isTrueFalseQuestion(Question question) {
+    if (question.trueFalseQuestion != null) {
+      return question.trueFalseQuestion;
+    }
+    switch (question.strCorrectAnswer.toLowerCase()) {
+      case "true":
+      case "vero":
+      case "false":
+      case "falso":
+        return true;
+    }
+    return false;
+  }
 
   @override
   List<Object> get props {
@@ -47,9 +81,11 @@ class Question extends Equatable {
       id,
       possibleAnswers,
       correctAnswer,
+      strCorrectAnswer,
       givenAnswer,
       origin,
       trueFalseQuestion,
+      ruleRef,
       utIns,
       utVar,
       dtIns,
@@ -62,9 +98,11 @@ class Question extends Equatable {
     String id,
     List<String> possibleAnswers,
     int correctAnswer,
+    String strCorrectAnswer,
     int givenAnswer,
     String origin,
     bool trueFalseQuestion,
+    int ruleRef,
     User utIns,
     User utVar,
     Timestamp dtIns,
@@ -75,9 +113,11 @@ class Question extends Equatable {
       id: id ?? this.id,
       possibleAnswers: possibleAnswers ?? this.possibleAnswers,
       correctAnswer: correctAnswer ?? this.correctAnswer,
+      strCorrectAnswer: strCorrectAnswer ?? this.strCorrectAnswer,
       givenAnswer: givenAnswer ?? this.givenAnswer,
       origin: origin ?? this.origin,
       trueFalseQuestion: trueFalseQuestion ?? this.trueFalseQuestion,
+      ruleRef: ruleRef ?? this.ruleRef,
       utIns: utIns ?? this.utIns,
       utVar: utVar ?? this.utVar,
       dtIns: dtIns ?? this.dtIns,
@@ -91,13 +131,15 @@ class Question extends Equatable {
       'id': id,
       'possibleAnswers': possibleAnswers,
       'correctAnswer': correctAnswer,
+      'strCorrectAnswer': strCorrectAnswer,
       'givenAnswer': givenAnswer,
       'origin': origin,
       'trueFalseQuestion': trueFalseQuestion,
-      'utIns': utIns,
-      'utVar': utVar,
-      'dtIns': dtIns,
-      'dtVar': dtVar,
+      'ruleRef': ruleRef,
+      // 'utIns': utIns.toMap(),
+      // 'utVar': utVar.toMap(),
+      // 'dtIns': dtIns.toMap(),
+      // 'dtVar': dtVar.toMap(),
     };
   }
 
@@ -106,14 +148,17 @@ class Question extends Equatable {
       questionStatement: map['questionStatement'],
       id: map['id'],
       possibleAnswers: List<String>.from(map['possibleAnswers']),
-      correctAnswer: map['correctAnswer'],
+      correctAnswer: calcTrueFalseCorrectAnswer(
+          map['strCorrectAnswer'], map['correctAnswer']),
+      strCorrectAnswer: map['strCorrectAnswer'],
       givenAnswer: map['givenAnswer'],
       origin: map['origin'],
       trueFalseQuestion: map['trueFalseQuestion'],
-      utIns: map['utIns'],
-      utVar: map['utVar'],
-      dtIns: map['dtIns'],
-      dtVar: map['dtVar'],
+      ruleRef: map['ruleRef'],
+      // utIns: User.fromMap(map['utIns']),
+      // utVar: User.fromMap(map['utVar']),
+      // dtIns: Timestamp.fromMap(map['dtIns']),
+      // dtVar: Timestamp.fromMap(map['dtVar']),
     );
   }
 
