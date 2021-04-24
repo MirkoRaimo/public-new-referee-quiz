@@ -49,7 +49,7 @@ class _TrueFalsePageState extends State<TrueFalsePage>
         },
       ),
       SelectableText(
-        "$STR_TRUE_OR_FALSE?",
+        "$STR_TRUE_OR_FALSE?", //TODO: Fix this name to handle also the case of local true - false page
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.headline5,
       ),

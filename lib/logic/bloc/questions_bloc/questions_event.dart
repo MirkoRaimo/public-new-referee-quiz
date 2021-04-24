@@ -9,6 +9,8 @@ abstract class QuestionsEvent extends Equatable {
 
 class LoadQuestions extends QuestionsEvent {}
 
+class LoadTrueFalseQuestions extends QuestionsEvent {}
+
 class AddQuestion extends QuestionsEvent {
   final Question question;
 

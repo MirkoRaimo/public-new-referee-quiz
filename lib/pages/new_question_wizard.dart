@@ -22,6 +22,7 @@ class NewQuestionWizard extends StatelessWidget {
         BlocProvider(
           create: (_) => QuestionsBloc(
             questionsRepository: FirebaseQuestionsRepository(),
+            // questionsRepository: LocalQuestionsRepository(), //TODO: Remove this line: it's useful just for dev purposes
           ),
         )
       ],

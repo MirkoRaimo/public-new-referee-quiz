@@ -17,7 +17,9 @@ class QuestionsBloc extends Bloc<QuestionsEvent, QuestionsState> {
 
   @override
   Stream<QuestionsState> mapEventToState(QuestionsEvent event) async* {
-    if (event is LoadQuestions) {
+    if (event is LoadTrueFalseQuestions) {
+      yield* _mapLoadTrueFalseQuestionsToState();
+    } else if (event is LoadQuestions) {
       yield* _mapLoadQuestionsToState();
     } else if (event is AddQuestion) {
       yield* _mapAddQuestionToState(event);
@@ -29,6 +31,23 @@ class QuestionsBloc extends Bloc<QuestionsEvent, QuestionsState> {
       yield* _mapQuestionsUpdateToState(event);
     }
   }
+
+  Stream<QuestionsState> _mapLoadTrueFalseQuestionsToState() async* {
+    _questionsSubscription?.cancel();
+    _questionsSubscription = _questionsRepository
+        .questions()
+        // .where((question) => Question.isTrueFalseQuestion(question as Question))
+        // .where((questions) => (questions as List<Question>).where((question) => Question.isTrueFalseQuestion(question as Question)) )
+        .listen((questions) => add(QuestionsUpdated(questions
+            .where((question) => Question.isTrueFalseQuestion(question))
+            .toList())));
+  }
+
+  // bool isTrueFalseQuestion(Question question) {
+  //   String lowerFirstAnswer = question.possibleAnswers[0].toLowerCase();
+  //   return lowerFirstAnswer.contains(true.toString()) ||
+  //       lowerFirstAnswer.contains(true.toString());
+  // }
 
   Stream<QuestionsState> _mapLoadQuestionsToState() async* {
     _questionsSubscription?.cancel();

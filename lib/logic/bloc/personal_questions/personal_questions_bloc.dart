@@ -34,7 +34,9 @@ class PersonalQuestionsBloc
   @override
   Stream<PersonalQuestionsState> mapEventToState(
       PersonalQuestionsEvent event) async* {
-    if (event is PLoadQuestions) {
+    if (event is PLoadTrueFalseQuestions) {
+      questionsBloc.add(LoadTrueFalseQuestions());
+    } else if (event is PLoadQuestions) {
       questionsBloc.add(LoadQuestions());
     } else if (event is UpdateQuestions) {
       yield* _mapUpdateQuestionsToState(event);

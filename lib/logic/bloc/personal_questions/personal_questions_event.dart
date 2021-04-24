@@ -30,3 +30,5 @@ class UpdateQuestions extends PersonalQuestionsEvent {
 }
 
 class PLoadQuestions extends PersonalQuestionsEvent {}
+
+class PLoadTrueFalseQuestions extends PersonalQuestionsEvent {}
