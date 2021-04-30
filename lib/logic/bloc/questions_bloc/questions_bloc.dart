@@ -34,13 +34,15 @@ class QuestionsBloc extends Bloc<QuestionsEvent, QuestionsState> {
 
   Stream<QuestionsState> _mapLoadTrueFalseQuestionsToState() async* {
     _questionsSubscription?.cancel();
-    _questionsSubscription = _questionsRepository
-        .questions()
-        // .where((question) => Question.isTrueFalseQuestion(question as Question))
-        // .where((questions) => (questions as List<Question>).where((question) => Question.isTrueFalseQuestion(question as Question)) )
-        .listen((questions) => add(QuestionsUpdated(questions
-            .where((question) => Question.isTrueFalseQuestion(question))
-            .toList())));
+    _questionsSubscription =
+        _questionsRepository.questions().listen((questions) {
+      questions = questions
+          .where((question) => Question.isTrueFalseQuestion(question))
+          .toList()
+            ..shuffle();
+      add(QuestionsUpdated((questions.sublist(
+          0, questions.length < 10 ? questions.length : 10))));
+    });
   }
 
   // bool isTrueFalseQuestion(Question question) {
