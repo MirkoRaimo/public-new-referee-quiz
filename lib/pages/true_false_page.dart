@@ -23,6 +23,7 @@ class _TrueFalsePageState extends State<TrueFalsePage>
     with TickerProviderStateMixin {
   List<Card> listOfCards;
   CardController controller = CardController();
+  bool disableAnswerButtons = false;
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +144,7 @@ class _TrueFalsePageState extends State<TrueFalsePage>
             context
                 .read<PersonalQuestionsBloc>()
                 .add(AnswerQuestion(index, givenAnswer));
+            disableAnswerButtons = false;
           }
         });
   }
@@ -172,7 +174,12 @@ class _TrueFalsePageState extends State<TrueFalsePage>
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18.0),
               side: BorderSide(color: Colors.redAccent)),
-          onPressed: () => controller.triggerLeft(),
+          onPressed: () {
+            if (!disableAnswerButtons) {
+              controller.triggerLeft();
+            }
+            disableAnswerButtons = true;
+          },
           color: Colors.redAccent,
           textColor: Colors.white,
           child: Text(STR_FALSE, style: TextStyle(fontSize: 14)),
@@ -184,7 +191,12 @@ class _TrueFalsePageState extends State<TrueFalsePage>
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18.0),
               side: BorderSide(color: Colors.lightGreen)),
-          onPressed: () => controller.triggerRight(),
+          onPressed: () {
+            if (!disableAnswerButtons) {
+              controller.triggerRight();
+            }
+            disableAnswerButtons = true;
+          },
           color: Colors.lightGreen,
           textColor: Colors.white,
           child: Text(STR_TRUE, style: TextStyle(fontSize: 14)),
