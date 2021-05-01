@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nuovoquizarbitri/logic/bloc/auth_bloc/authentication_bloc.dart';
 import 'package:nuovoquizarbitri/utils/constants.dart';
+import 'package:nuovoquizarbitri/widget/custom_divider.dart';
 
 Widget homeGrid(BuildContext context) {
   final AuthenticationStatus userStatus =
@@ -19,7 +20,10 @@ Widget homeGrid(BuildContext context) {
               PTH_LOGO_TRUE_OR_FALSE, LOCAL_TRUE_FALSE_ROUTE),
         ],
       ),
-      Divider(), //TODO: Add a better divider to say that the elements below are in beta version
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: CustomDivider(),
+      ),
       GridView.count(
         crossAxisCount: 2,
         shrinkWrap: true,
