@@ -11,8 +11,9 @@ import 'package:nuovoquizarbitri/widget/recap_answers_list.dart';
 import 'package:questions_repository/questions_repository.dart';
 
 class TrueFalsePage extends StatefulWidget {
-  TrueFalsePage({Key key}) : super(key: key);
+  TrueFalsePage({@required this.pageName, Key key}) : super(key: key);
   final String title = APP_NAME;
+  final String pageName;
 
   @override
   _TrueFalsePageState createState() => _TrueFalsePageState();
@@ -49,7 +50,7 @@ class _TrueFalsePageState extends State<TrueFalsePage>
         },
       ),
       SelectableText(
-        "$STR_TRUE_OR_FALSE?", //TODO: Fix this name to handle also the case of local true - false page
+        "${widget.pageName}?",
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.headline5,
       ),
